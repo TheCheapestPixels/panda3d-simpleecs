@@ -16,6 +16,10 @@ class CountComponent:
     name: str
 
 
+class DerivedCountComponent(CountComponent):
+    pass
+
+
 class CountingSystem:
     num_components = 0
     component_types = [
@@ -63,3 +67,15 @@ def test_system_init_destroy_components(manager):
 
     manager.update(0)
     assert counting_system.num_components == 0
+
+
+def test_pick_up_derived_components(manager):
+    counting_system = CountingSystem()
+    entity = manager.create_entity()
+    entity.add_component(DerivedCountComponent(name='foo'))
+    manager.add_system(counting_system)
+
+    assert counting_system.num_components == 0
+
+    manager.update(0)
+    assert counting_system.num_components == 1

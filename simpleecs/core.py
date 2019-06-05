@@ -170,7 +170,10 @@ class ECSManager():
         components = {k: [] for k in component_types}
         for entity in self.entities | self._dead_entities:
             for typeid in component_types:
-                components[typeid] += getattr(entity, component_list).get(typeid, [])
+                entity_components = getattr(entity, component_list)
+                matching_types = [t for t in entity_components.keys() if issubclass(t, typeid)]
+                for matching_type in matching_types:
+                    components[typeid] += entity_components.get(matching_type, [])
 
         return components
 
